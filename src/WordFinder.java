@@ -1,30 +1,67 @@
+import java.util.Scanner;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
+
+
+
 
 public class WordFinder{
 
+//    A class that finds the words
+//    Create an interface for this class? - one of the requirements
+////    Create a method that sorts the final output of words
+private List<Set<String>> words = new ArrayList<>();
+    Scanner dict = null;
+//private List<Set<String>> words = new ArrayList<>();
+//    Scanner dict = null;
+public void WordSorter(String filename){
+    filename = "testWord.txt";
+    String line = null;
 
-    private Set<String> answers;
+    try {
+        // FileReader reads text files in the default encoding.
+        FileReader fileReader =
+                new FileReader(filename);
 
-    public WordFinder(String word, String fileName){
-        findWords(word.toUpperCase(),fileName);
+        // Always wrap FileReader in BufferedReader.
+        BufferedReader bufferedReader =
+                new BufferedReader(fileReader);
+
+        while((line = bufferedReader.readLine()) != null) {
+            line = line.toUpperCase();
+            putWord(line);
+        }
+
+        // Always close files.
+        bufferedReader.close();
     }
-
-    public Set<String> getAnswers(){
-        return answers;
+    catch(FileNotFoundException ex) {
+        System.out.println(
+                "Unable to open file '" +
+                        filename + "'");
     }
-
-    private void findWords(String word, String fileName) {
-        WordSorter wordSort = new WordSorter(fileName);
-        List<Set<String>> allWords=wordSort.getArray();
-        answers=allWords.get(((int) word.charAt(0))-65);
-        Set<String> s2=allWords.get(((int) word.charAt(1))-65);
-        Set<String> s3=allWords.get(((int) word.charAt(2))-65);
-        answers.retainAll(s2);
-        answers.retainAll(s3);
+    catch(IOException ex) {
+        System.out.println(
+                "Error reading file '"
+                        + filename + "'");
+        // Or we could just do this:
+        // ex.printStackTrace();
     }
 }
+
+    private void putWord(String word) {
+        //go through word letter by letter and put it into the array ASCII - 65
+        for(int i = 0; i < word.length(); i++ ){
+            char letter =  word.charAt(i);
+            int ascii = (int) letter;
+            int index = ascii - 65;
+            words.get(index).add(word);
+        }
+    }
+
+
+}
+
 
 
 
